@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 import json
 
-# Load image
+# Load base image
 image = Image.open("base.png").convert("RGBA")
 draw = ImageDraw.Draw(image)
 
@@ -9,31 +9,44 @@ draw = ImageDraw.Draw(image)
 with open("counts.json", "r") as f:
     counts = json.load(f)
 
-# Load font
-font = ImageFont.truetype("font.ttf", 28)
+font = ImageFont.truetype("font.ttf", 32)
 
-# TODO: Adjust coordinates to match your image
-rune_positions = {
-    "El": (110, 95),
-    "Eld": (180, 95),
-    "Tir": (250, 95),
-    "Nef": (320, 95),
-    "Eth": (390, 95),
-    "Ith": (460, 95),
-    "Tal": (530, 95),
-    "Ral": (600, 95),
-    "Ort": (670, 95),
-}
+# Grid settings (adjust if needed)
+rows = 3
+cols = 11
 
-for rune, position in rune_positions.items():
-    count = counts.get(rune, 0)
+start_x = 40
+start_y = 40
+x_spacing = 110
+y_spacing = 120
 
-    # Shadow
-    draw.text((position[0]+2, position[1]+2), str(count),
-              font=font, fill="black")
+# Rune order (left to right, top to bottom)
+rune_order = [
+    "El","Eld","Tir","Nef","Eth","Ith","Tal","Ral","Ort","Thul","Amn",
+    "Sol","Shael","Dol","Hel","Io","Lum","Ko","Fal","Lem","Pul","Um",
+    "Mal","Ist","Gul","Vex","Ohm","Lo","Sur","Ber","Jah","Cham","Zod"
+]
 
-    # Main text
-    draw.text(position, str(count),
-              font=font, fill=(212,175,55))
+index = 0
+
+for row in range(rows):
+    for col in range(cols):
+        if index >= len(rune_order):
+            break
+
+        rune = rune_order[index]
+        count = counts.get(rune, 0)
+
+        x = start_x + col * x_spacing
+        y = start_y + row * y_spacing
+
+        # Shadow
+        draw.text((x+2, y+2), str(count), font=font, fill="black")
+
+        # Gold number
+        draw.text((x, y), str(count), font=font, fill=(212,175,55))
+
+        index += 1
 
 image.save("output.png")
+print("Image generated!")
