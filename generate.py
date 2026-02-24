@@ -14,24 +14,24 @@ with open("counts.json", "r") as f:
     counts = json.load(f)
 
 # ===============================
-# FONT
+# FONT (slightly smaller fits circles better)
 # ===============================
-font = ImageFont.truetype("font.ttf", 32)
+font = ImageFont.truetype("font.ttf", 28)
 
 # ===============================
-# GRID CONFIG
+# GRID CONFIG (TUNED TO YOUR IMAGE)
 # ===============================
 rows = 3
 cols = 11
 
-start_x = 40
-start_y = 40
+start_x = 42
+start_y = 78   # moved down into yellow circle area
 
-cell_width = 110
-cell_height = 120
+cell_width = 74
+cell_height = 138
 
 # ===============================
-# RUNE ORDER (DO NOT CHANGE)
+# RUNE ORDER
 # ===============================
 rune_order = [
     "El","Eld","Tir","Nef","Eth","Ith","Tal","Ral","Ort","Thul","Amn",
@@ -53,23 +53,22 @@ for index, rune in enumerate(rune_order):
     count = counts.get(rune, 0)
     text = str(count)
 
-    # Top-left of this cell
     cell_x = start_x + col * cell_width
     cell_y = start_y + row * cell_height
 
-    # Get text size for centering
+    # Measure text
     bbox = draw.textbbox((0, 0), text, font=font)
     text_width = bbox[2] - bbox[0]
     text_height = bbox[3] - bbox[1]
 
-    # Center text inside cell
-    x = cell_x + (cell_width - text_width) // 2
-    y = cell_y + (cell_height - text_height) // 2
+    # Center in circle zone
+    x = cell_x - text_width // 2 + 35
+    y = cell_y - text_height // 2
 
     # Shadow
     draw.text((x + 2, y + 2), text, font=font, fill="black")
 
-    # Gold number
+    # Gold text
     draw.text((x, y), text, font=font, fill=(212, 175, 55))
 
 # ===============================
