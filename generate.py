@@ -14,21 +14,21 @@ with open("counts.json", "r") as f:
     counts = json.load(f)
 
 # ===============================
-# FONT (slightly smaller fits circles better)
+# FONT
 # ===============================
-font = ImageFont.truetype("font.ttf", 28)
+font = ImageFont.truetype("font.ttf", 26)
 
 # ===============================
-# GRID CONFIG (TUNED TO YOUR IMAGE)
+# GRID CONFIG (CALIBRATED)
 # ===============================
 rows = 3
 cols = 11
 
-start_x = 42
-start_y = 78   # moved down into yellow circle area
+start_x = 60      # first circle center X
+start_y = 110     # first row circle center Y
 
-cell_width = 74
-cell_height = 138
+x_spacing = 70    # horizontal distance between circle centers
+y_spacing = 125   # vertical distance between rows
 
 # ===============================
 # RUNE ORDER
@@ -53,17 +53,18 @@ for index, rune in enumerate(rune_order):
     count = counts.get(rune, 0)
     text = str(count)
 
-    cell_x = start_x + col * cell_width
-    cell_y = start_y + row * cell_height
+    # Circle center position
+    center_x = start_x + col * x_spacing
+    center_y = start_y + row * y_spacing
 
     # Measure text
     bbox = draw.textbbox((0, 0), text, font=font)
     text_width = bbox[2] - bbox[0]
     text_height = bbox[3] - bbox[1]
 
-    # Center in circle zone
-    x = cell_x - text_width // 2 + 35
-    y = cell_y - text_height // 2
+    # Center text exactly in circle
+    x = center_x - text_width // 2
+    y = center_y - text_height // 2
 
     # Shadow
     draw.text((x + 2, y + 2), text, font=font, fill="black")
