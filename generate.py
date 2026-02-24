@@ -19,16 +19,16 @@ with open("counts.json", "r") as f:
 font = ImageFont.truetype("font.ttf", 26)
 
 # ===============================
-# GRID CONFIG (CALIBRATED)
+# GRID CONFIG (ACTUAL CALIBRATION)
 # ===============================
 rows = 3
 cols = 11
 
-start_x = 60      # first circle center X
-start_y = 110     # first row circle center Y
+start_x = 60
+start_y = 95      # Correct first row center
 
-x_spacing = 70    # horizontal distance between circle centers
-y_spacing = 125   # vertical distance between rows
+x_spacing = 70
+y_spacing = 110   # Correct vertical spacing
 
 # ===============================
 # RUNE ORDER
@@ -53,27 +53,18 @@ for index, rune in enumerate(rune_order):
     count = counts.get(rune, 0)
     text = str(count)
 
-    # Circle center position
     center_x = start_x + col * x_spacing
     center_y = start_y + row * y_spacing
 
-    # Measure text
     bbox = draw.textbbox((0, 0), text, font=font)
     text_width = bbox[2] - bbox[0]
     text_height = bbox[3] - bbox[1]
 
-    # Center text exactly in circle
     x = center_x - text_width // 2
     y = center_y - text_height // 2
 
-    # Shadow
     draw.text((x + 2, y + 2), text, font=font, fill="black")
-
-    # Gold text
     draw.text((x, y), text, font=font, fill=(212, 175, 55))
 
-# ===============================
-# SAVE
-# ===============================
 image.save("output.png")
 print("Image generated successfully!")
